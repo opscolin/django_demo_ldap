@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  openldap:
+    container_name: openldap
+    image: osixia/openldap:latest
+    restart: always
+    environment:
+      LDAP_ORGANISATION: "colinspace"
+      LDAP_DOMAIN: "colinspace.com"
+      LDAP_ADMIN_PASSWORD: "colinXXLdap"
+      LDAP_CONFIG_PASSWORD: "colinXXLdap"
+
+    ports:
+      - "8389:389"
+      - "8636:636"
+
+  phpldapadmin:
+    container_name: phpldapadmin
+    image: osixia/phpldapadmin:latest
+    ports:
+      - "8080:80"
+    environment:
+      - PHPLDAPADMIN_HTTPS=false
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+    links:
+      - openldap
+    depends_on:
+      - openldap
